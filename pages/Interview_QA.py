@@ -1,4 +1,8 @@
+
 import streamlit as st
+
+# 🔐 Payment flag (temporary MVP logic)
+interview_paid = False   # change to True to unlock
 import os
 
 st.set_page_config(page_title="Interview Q&A", layout="wide")
