@@ -151,4 +151,8 @@ Includes:
 • 120+ VLSI Questions  
 • 100+ HR & Project Questions  
 """)
-    st.button("🔓 Unlock Now (Payment Coming Soon)")
+    
+if not interview_paid:
+    st.warning("🔒 Unlock Interview Pack – ₹99")
+    if st.button("Go to Payment"):
+        st.switch_page("pages/4_Payment.py")

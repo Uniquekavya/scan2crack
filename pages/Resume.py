@@ -1,5 +1,9 @@
 import streamlit as st
-from reportlab.lib.pagesizes import A4
+try:
+    from reportlab.lib.pagesizes import A4
+except ImportError:
+    A4 = None
+
 from reportlab.pdfgen import canvas
 import io
 
@@ -185,3 +189,5 @@ else:
     st.caption("Payment integration coming soon")
 
 
+if st.button("Go to Payment"):
+    st.switch_page("pages/4_Payment.py")

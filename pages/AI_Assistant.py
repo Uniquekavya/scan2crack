@@ -64,3 +64,8 @@ if st.button("Ask"):
                 "Try using keywords like:\n"
                 "PWM, ESP32, Embedded System, CMOS, Setup Time, Project"
             )
+if not ai_paid:
+    st.warning("🔒 Unlock AI Assistant – ₹149")
+    if st.button("Go to Payment"):
+        st.switch_page("pages/4_Payment.py")
+    st.stop()
