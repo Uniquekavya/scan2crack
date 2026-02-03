@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 st.set_page_config(page_title="Payment", layout="centered")
 
@@ -34,14 +35,19 @@ st.markdown("---")
 # =========================
 st.subheader("📲 Scan & Pay (UPI)")
 
-st.image(
-    "assets/payment/upi_qr.png",
-    caption="Scan the QR to make payment",
-    use_container_width=True
-)
+QR_PATH = "assets/payment/upi_qr.png"
+
+if os.path.exists(QR_PATH):
+    st.image(
+        QR_PATH,
+        caption="Scan the QR to make payment",
+        width="stretch"
+    )
+else:
+    st.warning("⚠️ QR image not found. Please add it to assets/payment/upi_qr.png")
 
 st.info("""
-📌 After payment:
+📌 **After payment:**
 • Take a screenshot  
 • Send it to **scan2crack.support@gmail.com**  
 • Access will be enabled manually  
