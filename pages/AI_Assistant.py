@@ -1,5 +1,6 @@
 import streamlit as st
-
+# 🔐 Payment flag (temporary MVP logic)
+ai_paid = False   # change to True to unlock AI
 st.set_page_config(page_title="AI Interview Assistant", layout="wide")
 
 st.title("🤖 Scan2Crack Smart Interview Bot")
