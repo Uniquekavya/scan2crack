@@ -67,5 +67,5 @@ if st.button("Ask"):
 if not ai_paid:
     st.warning("🔒 Unlock AI Assistant – ₹149")
     if st.button("Go to Payment"):
-        st.switch_page("pages/4_Payment.py")
+        st.switch_page("pages/Payments.py")
     st.stop()

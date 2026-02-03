@@ -190,4 +190,4 @@ else:
 
 
 if st.button("Go to Payment"):
-    st.switch_page("pages/4_Payment.py")
+    st.switch_page("pages/Payments.py")
