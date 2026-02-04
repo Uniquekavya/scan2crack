@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- PATH SETUP ----------------
+# ---------------- PATHS ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 
@@ -17,7 +17,7 @@ resume_img = os.path.join(ASSETS_DIR, "resume.jpg")
 interview_img = os.path.join(ASSETS_DIR, "interview.jpg")
 ai_img = os.path.join(ASSETS_DIR, "ai.jpg")
 
-# ---------------- HERO SECTION ----------------
+# ---------------- HERO ----------------
 if os.path.exists(hero_img):
     st.image(hero_img, use_container_width=True)
 
@@ -34,20 +34,17 @@ st.markdown(
 
 st.markdown("---")
 
-# ---------------- MAIN ACTION BUTTONS ----------------
+# ---------------- MAIN ACTION LINKS ----------------
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("📄 Build Resume", use_container_width=True):
-        st.switch_page("Resume Builder")
+    st.page_link("pages/Resume.py", label="📄 Build Resume", use_container_width=True)
 
 with col2:
-    if st.button("🎯 Interview Q&A", use_container_width=True):
-        st.switch_page("Interview Q&A")
+    st.page_link("pages/Interview_QA.py", label="🎯 Interview Q&A", use_container_width=True)
 
 with col3:
-    if st.button("🤖 AI Assistant", use_container_width=True):
-        st.switch_page("AI Assistant")
+    st.page_link("pages/AI_Assistant.py", label="🤖 AI Assistant", use_container_width=True)
 
 st.markdown("---")
 
@@ -59,24 +56,21 @@ with f1:
         st.image(resume_img, use_container_width=True)
     st.markdown("### 📄 Resume Builder")
     st.write("ATS-friendly resume templates made for ECE students.")
-    if st.button("Create Resume →", key="go_resume"):
-        st.switch_page("Resume Builder")
+    st.page_link("pages/Resume.py", label="Create Resume →")
 
 with f2:
     if os.path.exists(interview_img):
         st.image(interview_img, use_container_width=True)
     st.markdown("### 🎯 Interview Questions")
     st.write("500+ Core ECE, Embedded, VLSI & HR interview Q&A.")
-    if st.button("View Questions →", key="go_interview"):
-        st.switch_page("Interview Q&A")
+    st.page_link("pages/Interview_QA.py", label="View Questions →")
 
 with f3:
     if os.path.exists(ai_img):
         st.image(ai_img, use_container_width=True)
     st.markdown("### 🤖 AI Interview Assistant")
     st.write("Ask ECE interview questions and get instant answers.")
-    if st.button("Ask AI →", key="go_ai"):
-        st.switch_page("AI Assistant")
+    st.page_link("pages/AI_Assistant.py", label="Ask AI →")
 
 st.markdown("---")
 
@@ -86,12 +80,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("<p style='text-align:center;'>Resume ₹39 • Interview ₹99 • AI ₹149</p>", unsafe_allow_html=True)
+st.markdown(
+    "<p style='text-align:center;'>Resume ₹39 • Interview ₹99 • AI ₹149</p>",
+    unsafe_allow_html=True
+)
 
-center_col = st.columns([3, 2, 3])[1]
-with center_col:
-    if st.button("View Pricing & Payment", use_container_width=True):
-        st.switch_page("Payment")
+center = st.columns([3, 2, 3])[1]
+with center:
+    st.page_link("pages/4_Payment.py", label="View Pricing & Payment", use_container_width=True)
 
 st.markdown("---")
 
