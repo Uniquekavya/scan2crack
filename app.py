@@ -1,5 +1,3 @@
-# app.py  — FINAL, STABLE, ERROR-FREE NAVIGATION (uses page_link)
-
 import streamlit as st
 import os
 
@@ -36,14 +34,17 @@ st.markdown(
 
 st.markdown("---")
 
-# ---------------- MAIN ACTION LINKS ----------------
+# ---------------- MAIN NAVIGATION ----------------
 c1, c2, c3 = st.columns(3)
+
 with c1:
-    st.page_link("pages/Resume.py", label="📄 Build Resume", use_container_width=True)
+    st.page_link("Resume", label="📄 Build Resume", use_container_width=True)
+
 with c2:
-    st.page_link("pages/Interview_QA.py", label="🎯 Interview Q&A", use_container_width=True)
+    st.page_link("Interview_QA", label="🎯 Interview Q&A", use_container_width=True)
+
 with c3:
-    st.page_link("pages/AI_Assistant.py", label="🤖 AI Assistant", use_container_width=True)
+    st.page_link("AI_Assistant", label="🤖 AI Assistant", use_container_width=True)
 
 st.markdown("---")
 
@@ -55,21 +56,21 @@ with f1:
         st.image(resume_img, use_container_width=True)
     st.markdown("### 📄 Resume Builder")
     st.write("ATS-friendly resume templates made for ECE students.")
-    st.page_link("pages/Resume.py", label="Create Resume →")
+    st.page_link("Resume", label="Create Resume →")
 
 with f2:
     if os.path.exists(interview_img):
         st.image(interview_img, use_container_width=True)
     st.markdown("### 🎯 Interview Questions")
     st.write("500+ Core ECE, Embedded, VLSI & HR interview Q&A.")
-    st.page_link("pages/Interview_QA.py", label="View Questions →")
+    st.page_link("Interview_QA", label="View Questions →")
 
 with f3:
     if os.path.exists(ai_img):
         st.image(ai_img, use_container_width=True)
     st.markdown("### 🤖 AI Interview Assistant")
     st.write("Ask ECE interview questions and get instant answers.")
-    st.page_link("pages/AI_Assistant.py", label="Ask AI →")
+    st.page_link("AI_Assistant", label="Ask AI →")
 
 st.markdown("---")
 
@@ -78,6 +79,7 @@ st.markdown(
     "<h3 style='text-align:center;'>💳 Unlock Premium Features</h3>",
     unsafe_allow_html=True
 )
+
 st.markdown(
     "<p style='text-align:center;'>Resume ₹39 • Interview ₹99 • AI ₹149</p>",
     unsafe_allow_html=True
@@ -85,7 +87,7 @@ st.markdown(
 
 center = st.columns([3, 2, 3])[1]
 with center:
-    st.page_link("pages/Payment.py", label="View Pricing & Payment", use_container_width=True)
+    st.page_link("Payment", label="View Pricing & Payment", use_container_width=True)
 
 st.markdown("---")
 
