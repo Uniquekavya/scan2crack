@@ -25,7 +25,7 @@ st.sidebar.page_link("app.py", label="🏠 Home")
 st.sidebar.page_link("pages/Resume.py", label="📄 Resume Builder")
 st.sidebar.page_link("pages/Interview_QA.py", label="🎯 Interview Q&A")
 st.sidebar.page_link("pages/AI_Assistant.py", label="🤖 AI Assistant")
-st.sidebar.page_link("pages/Payment.py", label="💳 Pricing & Payment")
+st.sidebar.page_link("pages/Payments.py", label="💳 Pricing & Payment")
 
 st.sidebar.markdown("---")
 st.sidebar.caption("MVP v1 • Scan2Crack")
