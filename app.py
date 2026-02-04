@@ -1,3 +1,5 @@
+# app.py  — FINAL, STABLE, ERROR-FREE NAVIGATION (uses page_link)
+
 import streamlit as st
 import os
 
@@ -35,15 +37,12 @@ st.markdown(
 st.markdown("---")
 
 # ---------------- MAIN ACTION LINKS ----------------
-col1, col2, col3 = st.columns(3)
-
-with col1:
+c1, c2, c3 = st.columns(3)
+with c1:
     st.page_link("pages/Resume.py", label="📄 Build Resume", use_container_width=True)
-
-with col2:
+with c2:
     st.page_link("pages/Interview_QA.py", label="🎯 Interview Q&A", use_container_width=True)
-
-with col3:
+with c3:
     st.page_link("pages/AI_Assistant.py", label="🤖 AI Assistant", use_container_width=True)
 
 st.markdown("---")
@@ -79,7 +78,6 @@ st.markdown(
     "<h3 style='text-align:center;'>💳 Unlock Premium Features</h3>",
     unsafe_allow_html=True
 )
-
 st.markdown(
     "<p style='text-align:center;'>Resume ₹39 • Interview ₹99 • AI ₹149</p>",
     unsafe_allow_html=True
@@ -87,7 +85,7 @@ st.markdown(
 
 center = st.columns([3, 2, 3])[1]
 with center:
-    st.page_link("pages/4_Payment.py", label="View Pricing & Payment", use_container_width=True)
+    st.page_link("pages/Payment.py", label="View Pricing & Payment", use_container_width=True)
 
 st.markdown("---")
 
