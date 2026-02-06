@@ -38,7 +38,7 @@ with nav3:
         if st.button("Logout"):
             st.session_state.logged_in = False
             st.session_state.page = "login"
-            st.experimental_rerun()
+            st.rerun()
 
 st.markdown("---")
 
@@ -59,7 +59,7 @@ if st.session_state.page == "login":
             st.session_state.user_email = email
             st.session_state.user_data = user
             st.session_state.page = "home"
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Invalid email or password")
 
@@ -67,7 +67,7 @@ if st.session_state.page == "login":
     st.write("Don't have an account?")
     if st.button("Create new account"):
         st.session_state.page = "register"
-        st.experimental_rerun()
+        st.rerun()
 
 # =================================================
 # REGISTER PAGE
@@ -85,13 +85,13 @@ elif st.session_state.page == "register":
         if ok:
             st.success("Account created successfully. Please login.")
             st.session_state.page = "login"
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error(msg)
 
     if st.button("Back to Login"):
         st.session_state.page = "login"
-        st.experimental_rerun()
+        st.rerun()
 
 # =================================================
 # HOME / DASHBOARD
@@ -99,7 +99,6 @@ elif st.session_state.page == "register":
 elif st.session_state.page == "home":
 
     st.success(f"Welcome, {st.session_state.user_data.get('name','User')} 👋")
-
     st.markdown("### 🎓 Your Dashboard")
 
     col1, col2, col3 = st.columns(3)
@@ -113,6 +112,7 @@ elif st.session_state.page == "home":
             st.warning("Locked – ₹39")
             if st.button("Unlock Resume"):
                 st.session_state.page = "payment"
+                st.rerun()
 
     # ---------------- INTERVIEW ----------------
     with col2:
@@ -123,6 +123,7 @@ elif st.session_state.page == "home":
             st.warning("Locked – ₹99")
             if st.button("Unlock Interview"):
                 st.session_state.page = "payment"
+                st.rerun()
 
     # ---------------- AI ----------------
     with col3:
@@ -133,27 +134,28 @@ elif st.session_state.page == "home":
             st.warning("Locked – ₹149")
             if st.button("Unlock AI"):
                 st.session_state.page = "payment"
+                st.rerun()
 
 # =================================================
-# PAYMENT PAGE (PLACEHOLDER)
+# PAYMENT PAGE
 # =================================================
 elif st.session_state.page == "payment":
 
     st.header("💳 Payment")
 
     st.info("""
-    This is an early-access MVP.
+    🔹 Early-access MVP  
 
-    🔹 Pay via UPI (QR / external)
-    🔹 Send payment screenshot + email
-    🔹 Admin will unlock your access manually
+    • Pay via UPI / QR  
+    • Send payment screenshot + registered email  
+    • Admin will unlock access manually  
 
-    🔐 Automated payment coming soon.
+    🚀 Automated payment coming soon
     """)
 
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "home"
-        st.experimental_rerun()
+        st.rerun()
 
 # -------------------------------------------------
 # FOOTER
