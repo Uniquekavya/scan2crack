@@ -1,170 +1,163 @@
 import streamlit as st
-import os
+from auth import register_user, login_user
 
-# ---------------- CONFIG ----------------
+# -------------------------------------------------
+# PAGE CONFIG
+# -------------------------------------------------
 st.set_page_config(
     page_title="Scan2Crack – ECE Edition",
     page_icon="🚀",
     layout="wide"
 )
 
-# ---------------- STATE ----------------
+# -------------------------------------------------
+# SESSION STATE INIT
+# -------------------------------------------------
 if "page" not in st.session_state:
-    st.session_state.page = "home"
+    st.session_state.page = "login"
 
-# ---------------- PATHS ----------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ASSETS = os.path.join(BASE_DIR, "assets")
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
 
-def img(path):
-    p = os.path.join(ASSETS, path)
-    if os.path.exists(p):
-        st.image(p, use_container_width=True)
+if "user_email" not in st.session_state:
+    st.session_state.user_email = ""
 
-# ---------------- NAV BAR ----------------
-nav1, nav2, nav3, nav4 = st.columns(4)
+if "user_data" not in st.session_state:
+    st.session_state.user_data = {}
+
+# -------------------------------------------------
+# TOP NAV BAR
+# -------------------------------------------------
+nav1, nav2, nav3 = st.columns([2, 6, 2])
 
 with nav1:
-    if st.button("🏠 Home"):
-        st.session_state.page = "home"
-
-with nav2:
-    if st.button("📄 Resume"):
-        st.session_state.page = "resume"
+    st.markdown("## 🚀 Scan2Crack")
 
 with nav3:
-    if st.button("🎯 Interview"):
-        st.session_state.page = "interview"
-
-with nav4:
-    if st.button("🤖 AI"):
-        st.session_state.page = "ai"
+    if st.session_state.logged_in:
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.page = "login"
+            st.experimental_rerun()
 
 st.markdown("---")
 
-# ======================================================
-# =================== HOME PAGE ========================
-# ======================================================
-if st.session_state.page == "home":
+# =================================================
+# LOGIN PAGE
+# =================================================
+if st.session_state.page == "login":
 
-    img("hero.jpg")
+    st.header("🔐 Login")
 
-    st.markdown(
-        """
-        <div style="text-align:center; padding:30px;">
-            <h1 style="color:#6C63FF;">Scan2Crack – ECE Edition</h1>
-            <h4>Crack Core ECE Interviews with Confidence</h4>
-            <p>Resumes • Interview Q&A • AI Assistance</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    email = st.text_input("Email")
+    password = st.text_input("Password", type="password")
 
-    st.markdown("---")
-
-    c1, c2, c3 = st.columns(3)
-
-    with c1:
-        img("resume.jpg")
-        st.markdown("### 📄 Resume Builder")
-        st.write("ATS-friendly resumes for ECE students.")
-        if st.button("Build Resume →"):
-            st.session_state.page = "resume"
-
-    with c2:
-        img("interview.jpg")
-        st.markdown("### 🎯 Interview Questions")
-        st.write("500+ Core ECE interview Q&A.")
-        if st.button("View Questions →"):
-            st.session_state.page = "interview"
-
-    with c3:
-        img("ai.jpg")
-        st.markdown("### 🤖 AI Interview Assistant")
-        st.write("Ask doubts. Revise fast.")
-        if st.button("Ask AI →"):
-            st.session_state.page = "ai"
+    if st.button("Login"):
+        ok, user = login_user(email, password)
+        if ok:
+            st.session_state.logged_in = True
+            st.session_state.user_email = email
+            st.session_state.user_data = user
+            st.session_state.page = "home"
+            st.experimental_rerun()
+        else:
+            st.error("Invalid email or password")
 
     st.markdown("---")
+    st.write("Don't have an account?")
+    if st.button("Create new account"):
+        st.session_state.page = "register"
+        st.experimental_rerun()
 
-    st.markdown(
-        "<h3 style='text-align:center;'>💳 Premium Plans</h3>",
-        unsafe_allow_html=True
-    )
-    st.markdown(
-        "<p style='text-align:center;'>Resume ₹39 • Interview ₹99 • AI ₹149</p>",
-        unsafe_allow_html=True
-    )
+# =================================================
+# REGISTER PAGE
+# =================================================
+elif st.session_state.page == "register":
 
-# ======================================================
-# ================= RESUME PAGE ========================
-# ======================================================
-elif st.session_state.page == "resume":
+    st.header("📝 Register")
 
-    st.header("📄 Resume Builder")
-    st.warning("🔒 Locked – ₹39")
+    name = st.text_input("Full Name")
+    email = st.text_input("Email")
+    password = st.text_input("Password", type="password")
 
-    st.write("• Industry standard ECE resume format")
-    st.write("• Downloadable PDF")
-    st.write("• ATS friendly")
+    if st.button("Register"):
+        ok, msg = register_user(name, email, password)
+        if ok:
+            st.success("Account created successfully. Please login.")
+            st.session_state.page = "login"
+            st.experimental_rerun()
+        else:
+            st.error(msg)
 
-    if st.button("Go to Payment"):
-        st.session_state.page = "payment"
+    if st.button("Back to Login"):
+        st.session_state.page = "login"
+        st.experimental_rerun()
 
-# ======================================================
-# ================= INTERVIEW PAGE =====================
-# ======================================================
-elif st.session_state.page == "interview":
+# =================================================
+# HOME / DASHBOARD
+# =================================================
+elif st.session_state.page == "home":
 
-    st.header("🎯 Interview Questions")
-    st.warning("🔒 Locked – ₹99")
+    st.success(f"Welcome, {st.session_state.user_data.get('name','User')} 👋")
 
-    st.write("• Core ECE fundamentals")
-    st.write("• Embedded + VLSI")
-    st.write("• HR & Project questions")
+    st.markdown("### 🎓 Your Dashboard")
 
-    if st.button("Go to Payment"):
-        st.session_state.page = "payment"
+    col1, col2, col3 = st.columns(3)
 
-# ======================================================
-# ================= AI PAGE ============================
-# ======================================================
-elif st.session_state.page == "ai":
+    # ---------------- RESUME ----------------
+    with col1:
+        st.subheader("📄 Resume Builder")
+        if st.session_state.user_data.get("resume"):
+            st.success("Unlocked")
+        else:
+            st.warning("Locked – ₹39")
+            if st.button("Unlock Resume"):
+                st.session_state.page = "payment"
 
-    st.header("🤖 AI Interview Assistant")
-    st.warning("🔒 Locked – ₹149")
+    # ---------------- INTERVIEW ----------------
+    with col2:
+        st.subheader("🎯 Interview Q&A")
+        if st.session_state.user_data.get("interview"):
+            st.success("Unlocked")
+        else:
+            st.warning("Locked – ₹99")
+            if st.button("Unlock Interview"):
+                st.session_state.page = "payment"
 
-    st.write("• Ask ECE interview questions")
-    st.write("• Get concept explanations")
-    st.write("• Viva preparation")
+    # ---------------- AI ----------------
+    with col3:
+        st.subheader("🤖 AI Assistant")
+        if st.session_state.user_data.get("ai"):
+            st.success("Unlocked")
+        else:
+            st.warning("Locked – ₹149")
+            if st.button("Unlock AI"):
+                st.session_state.page = "payment"
 
-    if st.button("Go to Payment"):
-        st.session_state.page = "payment"
-
-# ======================================================
-# ================= PAYMENT PAGE =======================
-# ======================================================
+# =================================================
+# PAYMENT PAGE (PLACEHOLDER)
+# =================================================
 elif st.session_state.page == "payment":
 
-    st.header("💳 Scan & Pay")
+    st.header("💳 Payment")
 
-    img("payment/upi_qr.png")
+    st.info("""
+    This is an early-access MVP.
 
-    st.info(
-        """
-        After payment:
-        • Take screenshot  
-        • Send to scan2crack.support@gmail.com  
-        • Access will be unlocked manually  
+    🔹 Pay via UPI (QR / external)
+    🔹 Send payment screenshot + email
+    🔹 Admin will unlock your access manually
 
-        Automated payments coming soon.
-        """
-    )
+    🔐 Automated payment coming soon.
+    """)
 
-    if st.button("⬅ Back to Home"):
+    if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "home"
+        st.experimental_rerun()
 
-# ---------------- FOOTER ----------------
+# -------------------------------------------------
+# FOOTER
+# -------------------------------------------------
 st.markdown("---")
 st.markdown(
     "<div style='text-align:center; color:gray;'>MVP v1 • Built with ❤️ by Kav • Scan2Crack</div>",
