@@ -1,5 +1,4 @@
 import streamlit as st
-from pathlib import Path
 
 # ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Interview Q&A", layout="wide")
@@ -7,12 +6,8 @@ st.set_page_config(page_title="Interview Q&A", layout="wide")
 # ---------- ACCESS CHECK (ADMIN UNLOCK CONNECTS HERE) ----------
 interview_unlocked = st.session_state.user_data.get("interview", False)
 
-# ---------- PROJECT ROOT & PDF PATH (FIXED) ----------
-# Interview_QA.py is inside /pages
-# parent -> project root
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-
-PDF_PATH = PROJECT_ROOT / "assets" / "interview_packs" / "Scan2Crack_All_Domains_Interview_QA.pdf"
+# ---------- GOOGLE DRIVE LINK ----------
+DRIVE_LINK = "https://drive.google.com/drive/folders/1X-IsbYqewSVBMtiSHjy9t0wnJi4x2SHf"
 
 # ---------- HEADER ----------
 st.title("🎯 Interview Questions – ECE Edition")
@@ -50,7 +45,7 @@ A rectifier converts AC to DC.
 An inverter converts DC to AC.
 """)
 
-    st.info("📘 Full PDF includes **120+ Core ECE questions**")
+    st.info("📘 Full pack includes **120+ Core ECE questions**")
 
 # ===============================
 # EMBEDDED SYSTEMS (FREE PREVIEW)
@@ -75,7 +70,7 @@ UART, I2C, SPI.
 IoT connects devices to the internet for automation.
 """)
 
-    st.info("📘 Full PDF includes **150+ Embedded Systems questions**")
+    st.info("📘 Full pack includes **150+ Embedded Systems questions**")
 
 # ===============================
 # VLSI / DIGITAL (FREE PREVIEW)
@@ -100,7 +95,7 @@ Minimum time data must remain stable after clock edge.
 Unstable output due to timing violations.
 """)
 
-    st.info("📘 Full PDF includes **120+ VLSI questions**")
+    st.info("📘 Full pack includes **120+ VLSI questions**")
 
 # ===============================
 # HR & PROJECT (FREE PREVIEW)
@@ -125,27 +120,23 @@ Explain technical or team challenges.
 Mention technical and personal strengths.
 """)
 
-    st.info("📘 Full PDF includes **100+ HR & Project questions**")
+    st.info("📘 Full pack includes **100+ HR & Project questions**")
 
 # ===============================
-# PREMIUM DOWNLOAD SECTION
+# PREMIUM ACCESS SECTION
 # ===============================
 st.markdown("---")
-st.subheader("📄 Download Complete Interview Pack")
+st.subheader("📄 Access Complete Interview Pack")
 
 if interview_unlocked:
-    if PDF_PATH.exists():
-        with open(PDF_PATH, "rb") as file:
-            st.download_button(
-                label="⬇️ Download All Domains Interview PDF",
-                data=file,
-                file_name="Scan2Crack_All_Domains_Interview_QA.pdf",
-                mime="application/pdf"
-            )
-        st.success("✅ Premium access unlocked")
-    else:
-        st.error("❌ Interview PDF not found.")
-        st.code(str(PDF_PATH))  # shows resolved path for debugging
+    st.success("✅ Premium access unlocked")
+    st.markdown(
+        f"""
+        👉 **[Click here to open & download all Interview PDFs]({DRIVE_LINK})**
+        
+        (Google Drive – Core ECE, Embedded, VLSI & HR)
+        """
+    )
 else:
     st.warning("🔒 Interview Pack Locked – ₹99")
     st.caption("""
