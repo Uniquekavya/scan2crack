@@ -31,7 +31,7 @@ if "user_data" not in st.session_state:
 nav1, nav2, nav3 = st.columns([2, 6, 2])
 
 with nav1:
-    st.markdown("## 🚀 Scan2Crack")
+    st.markdown("## 🚀Scan2Crack")
 
 with nav3:
     if st.session_state.logged_in:
