@@ -1,21 +1,16 @@
-
 import streamlit as st
-
-# 🔐 Payment flag (temporary MVP logic)
-interview_paid = False   # change to True to unlock
 import os
 
+# ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Interview Q&A", layout="wide")
 
-# ===============================
-# CONFIG
-# ===============================
-PDF_PATH = "assets/interview_packs/Scan2Crack_All_Domains_Interview_QA.pdf"
-paid_user = False   # 🔴 change to True after payment integration
+# ---------- ACCESS CHECK (ADMIN UNLOCK CONNECTS HERE) ----------
+interview_unlocked = st.session_state.user_data.get("interview", False)
 
-# ===============================
-# HEADER
-# ===============================
+# ---------- CONFIG ----------
+PDF_PATH = "assets/interview_packs/Scan2Crack_All_Domains_Interview_QA.pdf"
+
+# ---------- HEADER ----------
 st.title("🎯 Interview Questions – ECE Edition")
 st.caption("500+ curated interview questions across Core, Embedded, VLSI & HR")
 
@@ -42,13 +37,13 @@ Power electronics deals with conversion and control of electrical power using se
 SMPS uses high-frequency switching to efficiently convert electrical power.
 
 **Q3. What is PWM?**  
-PWM controls power delivered to a load by varying the duty cycle of a digital signal.
+PWM controls power delivered to a load by varying the duty cycle.
 
 **Q4. What is a rectifier?**  
 A rectifier converts AC to DC.
 
 **Q5. What is an inverter?**  
-An inverter converts DC power into AC power.
+An inverter converts DC to AC.
 """)
 
     st.info("📘 Full PDF includes **120+ Core ECE questions**")
@@ -61,19 +56,19 @@ with tabs[1]:
 
     st.markdown("""
 **Q1. What is an Embedded System?**  
-An embedded system is designed to perform a specific task using hardware and software.
+An embedded system performs a specific function using hardware and software.
 
 **Q2. What is ESP32?**  
-ESP32 is a low-power microcontroller with built-in Wi-Fi and Bluetooth.
+ESP32 is a low-power microcontroller with Wi-Fi and Bluetooth.
 
-**Q3. Difference between Arduino and ESP32?**  
-ESP32 supports wireless communication and higher processing power.
+**Q3. Arduino vs ESP32?**  
+ESP32 supports wireless and higher processing power.
 
-**Q4. What protocols have you used?**  
-UART, I2C, and SPI.
+**Q4. Communication protocols used?**  
+UART, I2C, SPI.
 
 **Q5. What is IoT?**  
-IoT connects devices to the internet for monitoring and automation.
+IoT connects devices to the internet for automation.
 """)
 
     st.info("📘 Full PDF includes **150+ Embedded Systems questions**")
@@ -86,16 +81,16 @@ with tabs[2]:
 
     st.markdown("""
 **Q1. What is VLSI?**  
-VLSI integrates millions of transistors onto a single chip.
+Very Large Scale Integration integrates millions of transistors on a chip.
 
 **Q2. What is CMOS?**  
-CMOS uses complementary NMOS and PMOS transistors.
+CMOS uses complementary NMOS and PMOS.
 
 **Q3. What is setup time?**  
-Minimum time data must be stable before the clock edge.
+Minimum time data must be stable before clock edge.
 
 **Q4. What is hold time?**  
-Minimum time data must remain stable after the clock edge.
+Minimum time data must remain stable after clock edge.
 
 **Q5. What is metastability?**  
 Unstable output due to timing violations.
@@ -107,23 +102,23 @@ Unstable output due to timing violations.
 # HR & PROJECT (FREE PREVIEW)
 # ===============================
 with tabs[3]:
-    st.subheader("HR & Project Questions – Free Preview")
+    st.subheader("HR & Project – Free Preview")
 
     st.markdown("""
 **Q1. Tell me about yourself.**  
-Give a brief academic and technical introduction.
+Brief academic and technical introduction.
 
-**Q2. Explain your final year project.**  
-Focus on problem, solution, tools, and results.
+**Q2. Explain your project.**  
+Explain problem, solution, tools, and result.
 
 **Q3. Why should we hire you?**  
-Highlight your skills, projects, and learning attitude.
+Mention skills, projects, and learning attitude.
 
-**Q4. What challenges did you face?**  
-Explain technical or team challenges and solutions.
+**Q4. Challenges faced?**  
+Explain technical or team challenges.
 
-**Q5. What are your strengths?**  
-Mention technical strengths and consistency.
+**Q5. Strengths?**  
+Mention technical and personal strengths.
 """)
 
     st.info("📘 Full PDF includes **100+ HR & Project questions**")
@@ -134,7 +129,7 @@ Mention technical strengths and consistency.
 st.markdown("---")
 st.subheader("📄 Download Complete Interview Pack")
 
-if paid_user:
+if interview_unlocked:
     if os.path.exists(PDF_PATH):
         with open(PDF_PATH, "rb") as file:
             st.download_button(
@@ -145,9 +140,9 @@ if paid_user:
             )
         st.success("✅ Premium access unlocked")
     else:
-        st.error("❌ Interview PDF not found. Please check file path.")
+        st.error("❌ Interview PDF not found. Contact admin.")
 else:
-    st.warning("🔒 Unlock Full Interview Pack – ₹99")
+    st.warning("🔒 Interview Pack Locked – ₹99")
     st.caption("""
 Includes:
 • 120+ Core ECE Questions  
@@ -155,8 +150,12 @@ Includes:
 • 120+ VLSI Questions  
 • 100+ HR & Project Questions  
 """)
-    
-if not interview_paid:
-    st.warning("🔒 Unlock Interview Pack – ₹99")
+
     if st.button("Go to Payment"):
-        st.switch_page("pages/Payments.py")
+        st.session_state.page = "payment"
+        st.rerun()
+
+# ---------- BACK ----------
+if st.button("⬅ Back to Dashboard"):
+    st.session_state.page = "home"
+    st.rerun()
