@@ -1,6 +1,14 @@
+ADMIN_EMAIL = "admin@scan2crack.com"
+ADMIN_PASSWORD = "admin123"
+
+
+
+
 import streamlit as st
 from database import load_users, save_users
 import hashlib
+def admin_login(email, password):
+    return email == ADMIN_EMAIL and password == ADMIN_PASSWORD
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()

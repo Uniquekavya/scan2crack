@@ -1,1 +1,9 @@
-{}
+{
+  "user@email.com": {
+    "name": "Kavya",
+    "password": "hashed_password",
+    "resume": false,
+    "interview": false,
+    "ai": false
+  }
+}

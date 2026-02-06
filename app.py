@@ -1,5 +1,6 @@
 import streamlit as st
-from auth import register_user, login_user
+from auth import register_user, login_user, admin_login
+from database import load_users, save_users
 
 # -------------------------------------------------
 # PAGE CONFIG
@@ -31,7 +32,7 @@ if "user_data" not in st.session_state:
 nav1, nav2, nav3 = st.columns([2, 6, 2])
 
 with nav1:
-    st.markdown("## 🚀Scan2Crack")
+    st.markdown("## 🚀 Scan2Crack")
 
 with nav3:
     if st.session_state.logged_in:
@@ -64,9 +65,12 @@ if st.session_state.page == "login":
             st.error("Invalid email or password")
 
     st.markdown("---")
-    st.write("Don't have an account?")
     if st.button("Create new account"):
         st.session_state.page = "register"
+        st.rerun()
+
+    if st.button("Login as Admin"):
+        st.session_state.page = "admin_login"
         st.rerun()
 
 # =================================================
@@ -94,7 +98,7 @@ elif st.session_state.page == "register":
         st.rerun()
 
 # =================================================
-# HOME / DASHBOARD
+# USER DASHBOARD
 # =================================================
 elif st.session_state.page == "home":
 
@@ -103,10 +107,9 @@ elif st.session_state.page == "home":
 
     col1, col2, col3 = st.columns(3)
 
-    # ---------------- RESUME ----------------
     with col1:
         st.subheader("📄 Resume Builder")
-        if st.session_state.user_data.get("resume"):
+        if st.session_state.user_data["resume"]:
             st.success("Unlocked")
         else:
             st.warning("Locked – ₹39")
@@ -114,10 +117,9 @@ elif st.session_state.page == "home":
                 st.session_state.page = "payment"
                 st.rerun()
 
-    # ---------------- INTERVIEW ----------------
     with col2:
         st.subheader("🎯 Interview Q&A")
-        if st.session_state.user_data.get("interview"):
+        if st.session_state.user_data["interview"]:
             st.success("Unlocked")
         else:
             st.warning("Locked – ₹99")
@@ -125,10 +127,9 @@ elif st.session_state.page == "home":
                 st.session_state.page = "payment"
                 st.rerun()
 
-    # ---------------- AI ----------------
     with col3:
         st.subheader("🤖 AI Assistant")
-        if st.session_state.user_data.get("ai"):
+        if st.session_state.user_data["ai"]:
             st.success("Unlocked")
         else:
             st.warning("Locked – ₹149")
@@ -147,14 +148,65 @@ elif st.session_state.page == "payment":
     🔹 Early-access MVP  
 
     • Pay via UPI / QR  
-    • Send payment screenshot + registered email  
-    • Admin will unlock access manually  
+    • Send screenshot + registered email  
+    • Admin will unlock manually  
 
     🚀 Automated payment coming soon
     """)
 
     if st.button("⬅ Back to Dashboard"):
         st.session_state.page = "home"
+        st.rerun()
+
+# =================================================
+# ADMIN LOGIN
+# =================================================
+elif st.session_state.page == "admin_login":
+
+    st.header("🔐 Admin Login")
+
+    email = st.text_input("Admin Email")
+    password = st.text_input("Admin Password", type="password")
+
+    if st.button("Login"):
+        if admin_login(email, password):
+            st.session_state.page = "admin_panel"
+            st.rerun()
+        else:
+            st.error("Invalid admin credentials")
+
+    if st.button("Back"):
+        st.session_state.page = "login"
+        st.rerun()
+
+# =================================================
+# ADMIN PANEL
+# =================================================
+elif st.session_state.page == "admin_panel":
+
+    st.header("🛠️ Admin Panel – Unlock Users")
+
+    users = load_users()
+
+    if not users:
+        st.info("No registered users.")
+    else:
+        selected_email = st.selectbox("Select User", list(users.keys()))
+        user = users[selected_email]
+
+        resume = st.checkbox("Resume Access", value=user["resume"])
+        interview = st.checkbox("Interview Access", value=user["interview"])
+        ai = st.checkbox("AI Access", value=user["ai"])
+
+        if st.button("Save Access"):
+            users[selected_email]["resume"] = resume
+            users[selected_email]["interview"] = interview
+            users[selected_email]["ai"] = ai
+            save_users(users)
+            st.success("Access updated successfully!")
+
+    if st.button("Logout Admin"):
+        st.session_state.page = "login"
         st.rerun()
 
 # -------------------------------------------------
