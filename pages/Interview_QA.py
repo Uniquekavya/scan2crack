@@ -1,5 +1,5 @@
 import streamlit as st
-import os
+from pathlib import Path
 
 # ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="Interview Q&A", layout="wide")
@@ -7,8 +7,12 @@ st.set_page_config(page_title="Interview Q&A", layout="wide")
 # ---------- ACCESS CHECK (ADMIN UNLOCK CONNECTS HERE) ----------
 interview_unlocked = st.session_state.user_data.get("interview", False)
 
-# ---------- CONFIG ----------
-PDF_PATH = "assets/interview_packs/Scan2Crack_All_Domains_Interview_QA.pdf"
+# ---------- PROJECT ROOT & PDF PATH (FIXED) ----------
+# Interview_QA.py is inside /pages
+# parent -> project root
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+PDF_PATH = PROJECT_ROOT / "assets" / "interview_packs" / "Scan2Crack_All_Domains_Interview_QA.pdf"
 
 # ---------- HEADER ----------
 st.title("🎯 Interview Questions – ECE Edition")
@@ -130,7 +134,7 @@ st.markdown("---")
 st.subheader("📄 Download Complete Interview Pack")
 
 if interview_unlocked:
-    if os.path.exists(PDF_PATH):
+    if PDF_PATH.exists():
         with open(PDF_PATH, "rb") as file:
             st.download_button(
                 label="⬇️ Download All Domains Interview PDF",
@@ -140,7 +144,8 @@ if interview_unlocked:
             )
         st.success("✅ Premium access unlocked")
     else:
-        st.error("❌ Interview PDF not found. Contact admin.")
+        st.error("❌ Interview PDF not found.")
+        st.code(str(PDF_PATH))  # shows resolved path for debugging
 else:
     st.warning("🔒 Interview Pack Locked – ₹99")
     st.caption("""
