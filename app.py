@@ -1,5 +1,6 @@
 import streamlit as st
 from auth import login_user, register_user, admin_login
+from database import load_users, save_users
 
 # -------------------------------------------------
 # PAGE CONFIG
@@ -153,6 +154,46 @@ if not st.session_state.logged_in:
             st.error("Invalid admin credentials")
 
     st.stop()
+# =================================================
+# ADMIN PANEL (INSIDE app.py)
+# =================================================
+elif st.session_state.logged_in and st.session_state.is_admin:
+
+    st.header("🛠️ Admin Panel – Unlock User Access")
+    st.markdown("---")
+
+    users = load_users()
+
+    if not users:
+        st.info("No registered users yet.")
+    else:
+        selected_email = st.selectbox("Select User Email", list(users.keys()))
+        user = users[selected_email]
+
+        st.markdown("### 👤 User Details")
+        st.write(f"**Name:** {user.get('name')}")
+        st.write(f"**Email:** {selected_email}")
+
+        st.markdown("---")
+        st.markdown("### 🔓 Unlock Products")
+
+        resume = st.checkbox("📄 Resume Builder", value=user.get("resume", False))
+        interview = st.checkbox("🎯 Interview Q&A", value=user.get("interview", False))
+        ai = st.checkbox("🤖 AI Assistant", value=user.get("ai", False))
+
+        if st.button("💾 Save Access"):
+            users[selected_email]["resume"] = resume
+            users[selected_email]["interview"] = interview
+            users[selected_email]["ai"] = ai
+
+            save_users(users)
+            st.success("✅ Access updated successfully!")
+
+    st.markdown("---")
+    if st.button("⬅ Back to Dashboard"):
+        st.session_state.is_admin = False
+        st.rerun()
+
 
 # =================================================
 # DASHBOARD (LOGGED IN)
