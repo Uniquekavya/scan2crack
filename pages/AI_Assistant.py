@@ -1,40 +1,78 @@
 import streamlit as st
-# 🔐 Payment flag (temporary MVP logic)
-ai_paid = False   # change to True to unlock AI
+
+# ---------- SAFE SESSION INIT ----------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if "user_data" not in st.session_state:
+    st.session_state.user_data = {}
+
+# ---------- PAGE CONFIG ----------
 st.set_page_config(page_title="AI Interview Assistant", layout="wide")
 
 st.title("🤖 Scan2Crack Smart Interview Bot")
-st.caption("ECE interview answers • Offline • Free")
+st.caption("ECE interview answers • Offline • Student-friendly")
 
 st.markdown("---")
 
-paid_user = True  # later used for premium unlock
+# ---------- LOGIN PROTECTION ----------
+if not st.session_state.logged_in:
+    st.error("❌ Please login to access the AI Assistant.")
+    if st.button("⬅ Go to Login"):
+        st.session_state.page = "login"
+        st.rerun()
+    st.stop()
 
-# -------------------------
-# KNOWLEDGE BASE (FREE AI)
-# -------------------------
+# ---------- ACCESS CHECK (ADMIN UNLOCK CONNECTS HERE) ----------
+ai_unlocked = st.session_state.user_data.get("ai", False)
+
+# ---------- LOCKED STATE ----------
+if not ai_unlocked:
+    st.warning("🔒 AI Assistant Locked – ₹149")
+    st.caption("""
+Unlock benefits:
+• Ask unlimited ECE interview questions  
+• Core, Embedded, VLSI & HR coverage  
+• Offline, zero API cost  
+""")
+
+    if st.button("Go to Payment"):
+        st.session_state.page = "payment"
+        st.rerun()
+
+    if st.button("⬅ Back to Dashboard"):
+        st.session_state.page = "home"
+        st.rerun()
+
+    st.stop()
+
+# ===============================
+# AI KNOWLEDGE BASE (UNLOCKED)
+# ===============================
+
 knowledge_base = {
-    "pwm": "PWM is a technique used to control power delivered to a load by varying the duty cycle of a digital signal.",
-    "smps": "SMPS is a switch-mode power supply that uses high-frequency switching for high efficiency.",
-    "power electronics": "Power electronics deals with conversion and control of electrical power using semiconductor devices.",
-    "embedded system": "An embedded system is a dedicated system designed to perform a specific task using hardware and software.",
-    "esp32": "ESP32 is a low-power microcontroller with built-in Wi-Fi and Bluetooth, widely used in IoT applications.",
-    "uart": "UART is a serial communication protocol used for short-distance communication.",
-    "i2c": "I2C is a two-wire communication protocol supporting multiple slave devices.",
-    "spi": "SPI is a high-speed serial communication protocol using master-slave architecture.",
-    "cmos": "CMOS uses complementary NMOS and PMOS transistors for low power consumption.",
-    "setup time": "Setup time is the minimum time data must be stable before the clock edge.",
-    "hold time": "Hold time is the minimum time data must remain stable after the clock edge.",
-    "metastability": "Metastability occurs when a flip-flop output becomes unstable due to timing violations.",
-    "asic": "ASIC is an application-specific integrated circuit designed for a particular use.",
-    "tell me about yourself": "I am an ECE student with strong interest in embedded systems and core electronics, with hands-on project experience.",
-    "final year project": "Explain the problem statement, your solution, tools used, and results clearly.",
-    "why should we hire you": "Mention your technical skills, project experience, and willingness to learn."
+    "pwm": "PWM controls power delivered to a load by varying duty cycle.",
+    "smps": "SMPS is a switch-mode power supply using high-frequency switching.",
+    "power electronics": "Power electronics deals with conversion and control of electrical power.",
+    "embedded system": "An embedded system performs a specific task using hardware and software.",
+    "esp32": "ESP32 is a low-power MCU with Wi-Fi and Bluetooth.",
+    "uart": "UART is a serial communication protocol.",
+    "i2c": "I2C is a two-wire serial communication protocol.",
+    "spi": "SPI is a high-speed serial communication protocol.",
+    "cmos": "CMOS uses complementary NMOS and PMOS transistors.",
+    "setup time": "Minimum time data must be stable before clock edge.",
+    "hold time": "Minimum time data must remain stable after clock edge.",
+    "metastability": "Unstable output caused by timing violations.",
+    "asic": "ASIC is an application-specific integrated circuit.",
+    "tell me about yourself": "I am an ECE student with strong fundamentals and hands-on project experience.",
+    "final year project": "Explain the problem, solution, tools used, and results.",
+    "why should we hire you": "Highlight skills, projects, and learning attitude."
 }
 
-# -------------------------
-# USER INPUT
-# -------------------------
+# ===============================
+# USER INTERACTION
+# ===============================
+
 st.subheader("💬 Ask an Interview Question")
 
 user_question = st.text_input(
@@ -42,9 +80,6 @@ user_question = st.text_input(
     placeholder="Example: What is PWM?"
 )
 
-# -------------------------
-# RESPONSE LOGIC
-# -------------------------
 if st.button("Ask"):
     if not user_question.strip():
         st.warning("Please enter a question.")
@@ -60,13 +95,14 @@ if st.button("Ask"):
                 break
 
         if not found:
-            st.info(
-                "🤖 I couldn't find an exact match.\n\n"
-                "Try using keywords like:\n"
-                "PWM, ESP32, Embedded System, CMOS, Setup Time, Project"
-            )
-if not ai_paid:
-    st.warning("🔒 Unlock AI Assistant – ₹149")
-    if st.button("Go to Payment"):
-        st.switch_page("pages/Payments.py")
-    st.stop()
+            st.info("""
+🤖 I couldn’t find an exact match.
+
+Try keywords like:
+PWM, ESP32, Embedded System, CMOS, Setup Time, Project
+""")
+
+# ---------- BACK ----------
+if st.button("⬅ Back to Dashboard"):
+    st.session_state.page = "home"
+    st.rerun()

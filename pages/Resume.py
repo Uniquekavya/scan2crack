@@ -147,7 +147,7 @@ if resume_unlocked:
             mime="application/pdf"
         )
 else:
-    st.warning("🔒 Resume Pack Locked – ₹39")
+    st.warning("🔒 Resume Pack Locked – ₹5")
     st.caption("Complete payment. Admin will unlock access.")
 
     if st.button("Go to Payment"):

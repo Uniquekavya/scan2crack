@@ -14,19 +14,19 @@ st.markdown("---")
 
 st.subheader("📄 Resume Builder")
 st.write("✔ Industry-ready resume PDF")
-st.markdown("### 💰 ₹39")
+st.markdown("### 💰 ₹5")
 
 st.markdown("---")
 
 st.subheader("📘 Interview Question Pack")
 st.write("✔ 500+ ECE Interview Questions (PDF + Website)")
-st.markdown("### 💰 ₹99")
+st.markdown("### 💰 ₹10")
 
 st.markdown("---")
 
 st.subheader("🤖 AI Interview Assistant")
 st.write("✔ Ask unlimited ECE interview questions")
-st.markdown("### 💰 ₹149")
+st.markdown("### 💰 ₹20")
 
 st.markdown("---")
 
