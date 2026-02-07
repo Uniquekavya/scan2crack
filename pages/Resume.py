@@ -345,6 +345,90 @@ if jd_text:
 else:
     st.info("Paste a Job Description above to see preparation guidance.")
 
+# =================================================
+# ATS READINESS INDICATOR
+# =================================================
+st.markdown("---")
+st.subheader("📄 ATS Readiness Indicator")
+
+def ats_score_checker(resume_text, experience_text, jd_text):
+    score = 0
+    remarks = []
+
+    # -------- Action Verbs --------
+    action_verbs = ["designed", "developed", "implemented", "integrated", "analyzed", "optimized"]
+    verb_hits = sum(1 for v in action_verbs if v in experience_text.lower())
+
+    if verb_hits >= 3:
+        score += 20
+    else:
+        remarks.append("Use more strong action verbs (designed, implemented, etc.).")
+
+    # -------- Keyword Matching --------
+    keywords = [w for w in jd_text.lower().split() if len(w) > 4]
+    matched_keywords = sum(1 for k in keywords if k in resume_text.lower())
+
+    if matched_keywords >= 10:
+        score += 25
+    else:
+        remarks.append("Resume lacks enough job-specific keywords.")
+
+    # -------- Bullet Usage --------
+    bullet_count = experience_text.count("\n")
+    if bullet_count >= 3:
+        score += 15
+    else:
+        remarks.append("Experience section should have bullet points.")
+
+    # -------- Section Completeness --------
+    if all(len(sec.strip()) > 10 for sec in [profile, experience, education]):
+        score += 20
+    else:
+        remarks.append("One or more resume sections are incomplete.")
+
+    # -------- Sentence Length --------
+    long_lines = [l for l in experience_text.split("\n") if len(l) > 120]
+    if not long_lines:
+        score += 20
+    else:
+        remarks.append("Avoid very long sentences (keep under 2 lines).")
+
+    return score, remarks
+
+
+# -------- RUN ATS CHECK --------
+if jd_text:
+    resume_text_full = (
+        profile + " " +
+        skills_col1 + " " +
+        skills_col2 + " " +
+        skills_col3 + " " +
+        experience + " " +
+        education
+    )
+
+    ats_score, ats_remarks = ats_score_checker(
+        resume_text_full,
+        experience,
+        jd_text
+    )
+
+    st.metric("ATS Compatibility Score", f"{ats_score} / 100")
+
+    if ats_score >= 80:
+        st.success("✅ High ATS Readiness – Resume is well optimized")
+    elif ats_score >= 60:
+        st.info("⚠️ Medium ATS Readiness – Minor improvements needed")
+    else:
+        st.warning("❌ Low ATS Readiness – Resume needs optimization")
+
+    if ats_remarks:
+        st.markdown("### 🔧 ATS Improvement Suggestions")
+        for r in ats_remarks:
+            st.write(f"• {r}")
+else:
+    st.info("Paste a Job Description to evaluate ATS readiness.")
+
 
 # =================================================
 # PDF GENERATION
