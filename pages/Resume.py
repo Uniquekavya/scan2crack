@@ -198,6 +198,76 @@ jd_text = st.text_area(
 if jd_text:
     st.success("JD received successfully.")
 
+# =================================================
+# STEP 2: RESUME – JD MATCHING
+# =================================================
+st.subheader("🔍 Resume–JD Match Analysis")
+
+if jd_text:
+
+    # -------- Combine Resume Content --------
+    resume_text = (
+        profile + " " +
+        skills_col1 + " " +
+        skills_col2 + " " +
+        skills_col3 + " " +
+        experience
+    ).lower()
+
+    jd_lower = jd_text.lower()
+
+    # -------- Core ECE Keyword Bank --------
+    keyword_bank = [
+        "embedded", "esp32", "arduino", "microcontroller",
+        "uart", "spi", "i2c", "rtos",
+        "c", "embedded c",
+        "digital electronics", "verilog", "vlsi",
+        "cmos", "asic", "fpga",
+        "iot", "sensors",
+        "debugging", "testing", "pcb"
+    ]
+
+    # -------- Extract JD Keywords --------
+    jd_keywords = [k for k in keyword_bank if k in jd_lower]
+
+    # -------- Match Analysis --------
+    matched = [k for k in jd_keywords if k in resume_text]
+    missing = [k for k in jd_keywords if k not in resume_text]
+
+    if jd_keywords:
+        match_percent = int((len(matched) / len(jd_keywords)) * 100)
+    else:
+        match_percent = 0
+
+    # -------- Display Results --------
+    st.metric("Resume–JD Match", f"{match_percent}%")
+
+    if match_percent >= 80:
+        st.success("Excellent match with job description.")
+    elif match_percent >= 60:
+        st.info("Good match, but resume can be improved.")
+    else:
+        st.warning("Low match. Resume needs customization.")
+
+    # -------- Matched Keywords --------
+    if matched:
+        st.markdown("### ✅ Matching Skills")
+        st.write(", ".join(matched))
+
+    # -------- Missing Keywords --------
+    if missing:
+        st.markdown("### ❌ Missing Skills")
+        for m in missing:
+            st.write(f"• {m}")
+
+        st.markdown("### 💡 Suggestions to Improve Resume")
+        for m in missing:
+            st.write(f"• Add a project or experience related to **{m}**")
+
+else:
+    st.info("Paste a Job Description above to see matching analysis.")
+
+
 
 # =================================================
 # PDF GENERATION
