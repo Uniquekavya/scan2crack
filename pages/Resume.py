@@ -267,6 +267,83 @@ if jd_text:
 else:
     st.info("Paste a Job Description above to see matching analysis.")
 
+# =================================================
+# STEP 3: ROLE-BASED PREPARATION GUIDE
+# =================================================
+st.markdown("---")
+st.subheader("🧠 Preparation Guide")
+
+if jd_text:
+    jd_lower = jd_text.lower()
+
+    # -------- Role Detection --------
+    if any(k in jd_lower for k in ["embedded", "esp32", "microcontroller", "rtos"]):
+        role = "Embedded Engineer"
+
+        prepare_list = [
+            "Embedded C (pointers, memory, interrupts)",
+            "ESP32 architecture & peripherals",
+            "UART, SPI, I2C protocols",
+            "RTOS basics (tasks, scheduling)",
+            "Timers, ADC, GPIO",
+            "Debugging techniques"
+        ]
+
+        resources = {
+            "YouTube – Embedded C (Gate Smashers)": "https://www.youtube.com/watch?v=KJgsSFOSQv0",
+            "YouTube – ESP32 Tutorials (Random Nerd)": "https://www.youtube.com/@RandomNerdTutorials",
+            "Website – GeeksforGeeks Embedded": "https://www.geeksforgeeks.org/embedded-systems/"
+        }
+
+    elif any(k in jd_lower for k in ["vlsi", "cmos", "rtl", "verilog", "asic"]):
+        role = "VLSI / Digital Engineer"
+
+        prepare_list = [
+            "Digital Logic & FSMs",
+            "CMOS fundamentals",
+            "Verilog HDL",
+            "Timing analysis (setup/hold)",
+            "ASIC vs FPGA",
+            "Low power design basics"
+        ]
+
+        resources = {
+            "YouTube – Digital Electronics (Neso Academy)": "https://www.youtube.com/@NesoAcademy",
+            "YouTube – Verilog HDL": "https://www.youtube.com/watch?v=YCM2sG8c1nE",
+            "Website – VLSI Basics": "https://www.vlsiguru.com/"
+        }
+
+    else:
+        role = "Core ECE Engineer"
+
+        prepare_list = [
+            "Analog & Digital Electronics",
+            "Signals & Systems basics",
+            "Control Systems",
+            "Communication fundamentals",
+            "Power Electronics",
+            "Basic semiconductor devices"
+        ]
+
+        resources = {
+            "YouTube – Analog Electronics (Gate Smashers)": "https://www.youtube.com/@GateSmashers",
+            "YouTube – Communication Systems": "https://www.youtube.com/@nptelhrd",
+            "Website – Electronics Tutorials": "https://www.electronics-tutorials.ws/"
+        }
+
+    # -------- Display --------
+    st.success(f"Detected Role: **{role}**")
+
+    st.markdown("### ✅ What to Prepare")
+    for item in prepare_list:
+        st.write(f"• {item}")
+
+    st.markdown("### 📚 Recommended Resources")
+    for name, link in resources.items():
+        st.markdown(f"- [{name}]({link})")
+
+else:
+    st.info("Paste a Job Description above to see preparation guidance.")
 
 
 # =================================================
