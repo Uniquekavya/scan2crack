@@ -1,280 +1,110 @@
 import streamlit as st
-from auth import register_user, login_user, admin_login
-from database import load_users, save_users
 
-# -------------------------------------------------
-# PAGE CONFIG
-# -------------------------------------------------
-st.set_page_config(
-    page_title="Scan2Crack – ECE Edition",
-    page_icon="🚀",
-    layout="wide"
-)
-
-# -------------------------------------------------
-# GLOBAL CSS (UI MAGIC)
-# -------------------------------------------------
+# ---------------- HERO SECTION ----------------
 st.markdown("""
 <style>
-body {
-    background-color: #F8FAFC;
-}
-.card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
-}
 .hero {
-    background: linear-gradient(90deg, #4F46E5, #6366F1);
-    padding: 30px;
-    border-radius: 18px;
+    background: linear-gradient(135deg, #7C3AED, #6366F1, #EC4899);
+    padding: 80px 40px;
+    border-radius: 22px;
+    text-align: center;
     color: white;
 }
 .hero h1 {
-    margin-bottom: 5px;
+    font-size: 52px;
+    margin-bottom: 10px;
 }
-.center {
-    text-align: center;
+.hero p {
+    font-size: 18px;
+    opacity: 0.95;
 }
-.stButton>button {
-    background-color: #4F46E5;
-    color: white;
-    border-radius: 10px;
-    padding: 0.6em 1.2em;
+.hero-btn {
+    background-color: #FACC15;
+    color: black;
+    padding: 12px 26px;
+    border-radius: 12px;
+    font-weight: bold;
+    display: inline-block;
+    margin: 15px;
 }
-.stButton>button:hover {
-    background-color: #4338CA;
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
+.center { text-align:center; }
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------------
-# SESSION STATE INIT
-# -------------------------------------------------
-if "page" not in st.session_state:
-    st.session_state.page = "login"
-
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-if "user_email" not in st.session_state:
-    st.session_state.user_email = ""
-
-if "user_data" not in st.session_state:
-    st.session_state.user_data = {}
-
-# -------------------------------------------------
-# TOP HERO BAR
-# -------------------------------------------------
 st.markdown("""
-<div class="hero center">
-    <h1>🚀 Scan2Crack – ECE Edition</h1>
-    <p>Crack Core ECE Interviews with Confidence</p>
+<div class="hero">
+    <p style="background:#ffffff22; display:inline-block; padding:6px 14px; border-radius:999px;">
+        Your Ultimate ECE Interview Companion
+    </p>
+    <h1>Scan2Crack – <span style="color:#FACC15;">ECE Edition</span></h1>
+    <p>
+        One scan. One payment. All ECE interview essentials.<br>
+        Resume • Core • Embedded • VLSI • AI Help
+    </p>
+    <br>
+    <a class="hero-btn">Unlock for ₹99</a>
+    <a class="hero-btn" style="background:#ffffff33; color:white;">View Free Preview</a>
 </div>
 """, unsafe_allow_html=True)
 
+st.markdown("<br><br>", unsafe_allow_html=True)
+
+# ---------------- WHY CHOOSE ----------------
+st.markdown("<h2 class='center'>Why Choose Scan2Crack?</h2>", unsafe_allow_html=True)
+st.markdown("<p class='center'>Designed by ECE students, for ECE students</p>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-# =================================================
-# LOGIN PAGE
-# =================================================
-if st.session_state.page == "login":
+c1, c2, c3 = st.columns(3)
 
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.header("🔐 Login")
+with c1:
+    st.markdown("""
+    <div class="card center">
+        ⚡<h4>Quick Access</h4>
+        <p>Instant access to interview prep. No confusion. No overload.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    email = st.text_input("Email")
-    password = st.text_input("Password", type="password")
+with c2:
+    st.markdown("""
+    <div class="card center">
+        🧠<h4>Smart Content</h4>
+        <p>Curated questions, answers, and resume formats that actually work.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    if st.button("Login"):
-        ok, user = login_user(email, password)
-        if ok:
-            st.session_state.logged_in = True
-            st.session_state.user_email = email
-            st.session_state.user_data = user
-            st.session_state.page = "home"
-            st.rerun()
-        else:
-            st.error("Invalid email or password")
+with c3:
+    st.markdown("""
+    <div class="card center">
+        📈<h4>Proven Results</h4>
+        <p>Core ECE, Embedded, VLSI & HR — all covered.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("---")
+st.markdown("<br><br>", unsafe_allow_html=True)
+
+# ---------------- WHAT YOU GET ----------------
+st.markdown("<h2 class='center'>Everything You Need</h2>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
+
+features = [
+    "📄 ECE Fresher Resume Template",
+    "🎯 500+ Interview Questions",
+    "🤖 AI Interview Assistant",
+    "🧩 Domain-wise Preparation",
+    "⚡ Last-minute Revision Planner",
+    "🧠 Ready-made HR Answers"
+]
+
+for i in range(0, len(features), 2):
     col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Create new account"):
-            st.session_state.page = "register"
-            st.rerun()
-    with col2:
-        if st.button("Login as Admin"):
-            st.session_state.page = "admin_login"
-            st.rerun()
+    col1.markdown(f"<div class='card'>{features[i]}</div>", unsafe_allow_html=True)
+    if i+1 < len(features):
+        col2.markdown(f"<div class='card'>{features[i+1]}</div>", unsafe_allow_html=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =================================================
-# REGISTER PAGE
-# =================================================
-elif st.session_state.page == "register":
-
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.header("📝 Create Account")
-
-    name = st.text_input("Full Name")
-    email = st.text_input("Email")
-    password = st.text_input("Password", type="password")
-
-    if st.button("Register"):
-        ok, msg = register_user(name, email, password)
-        if ok:
-            st.success("Account created successfully!")
-            st.session_state.page = "login"
-            st.rerun()
-        else:
-            st.error(msg)
-
-    if st.button("⬅ Back to Login"):
-        st.session_state.page = "login"
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =================================================
-# USER DASHBOARD
-# =================================================
-elif st.session_state.page == "home":
-
-    st.success(f"Welcome, {st.session_state.user_data.get('name','User')} 👋")
-    st.markdown("### 🎓 Your Dashboard")
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.subheader("📄 Resume Builder")
-        st.write("ATS-friendly resume + scoring")
-        if st.session_state.user_data["resume"]:
-            st.success("Unlocked")
-        else:
-            st.warning("Locked – ₹39")
-            if st.button("Unlock Resume"):
-                st.session_state.page = "payment"
-                st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    with col2:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.subheader("🎯 Interview Q&A")
-        st.write("500+ Core ECE questions")
-        if st.session_state.user_data["interview"]:
-            st.success("Unlocked")
-        else:
-            st.warning("Locked – ₹99")
-            if st.button("Unlock Interview"):
-                st.session_state.page = "payment"
-                st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    with col3:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.subheader("🤖 AI Assistant")
-        st.write("Smart interview helper")
-        if st.session_state.user_data["ai"]:
-            st.success("Unlocked")
-        else:
-            st.warning("Locked – ₹149")
-            if st.button("Unlock AI"):
-                st.session_state.page = "payment"
-                st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    if st.button("Logout"):
-        st.session_state.logged_in = False
-        st.session_state.page = "login"
-        st.rerun()
-
-# =================================================
-# PAYMENT PAGE
-# =================================================
-elif st.session_state.page == "payment":
-
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.header("💳 Payment")
-
-    st.info("""
-    🔹 Early-access MVP  
-
-    • Pay via UPI / QR  
-    • Send screenshot + registered email  
-    • Admin will unlock manually  
-
-    🚀 Automated payment coming soon
-    """)
-
-    if st.button("⬅ Back to Dashboard"):
-        st.session_state.page = "home"
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =================================================
-# ADMIN LOGIN
-# =================================================
-elif st.session_state.page == "admin_login":
-
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.header("🔐 Admin Login")
-
-    email = st.text_input("Admin Email")
-    password = st.text_input("Admin Password", type="password")
-
-    if st.button("Login"):
-        if admin_login(email, password):
-            st.session_state.page = "admin_panel"
-            st.rerun()
-        else:
-            st.error("Invalid admin credentials")
-
-    if st.button("⬅ Back"):
-        st.session_state.page = "login"
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =================================================
-# ADMIN PANEL
-# =================================================
-elif st.session_state.page == "admin_panel":
-
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.header("🛠️ Admin Panel")
-
-    users = load_users()
-    if users:
-        selected_email = st.selectbox("Select User", list(users.keys()))
-        user = users[selected_email]
-
-        resume = st.checkbox("Resume Access", value=user["resume"])
-        interview = st.checkbox("Interview Access", value=user["interview"])
-        ai = st.checkbox("AI Access", value=user["ai"])
-
-        if st.button("Save Access"):
-            users[selected_email]["resume"] = resume
-            users[selected_email]["interview"] = interview
-            users[selected_email]["ai"] = ai
-            save_users(users)
-            st.success("Access updated successfully!")
-    else:
-        st.info("No registered users yet.")
-
-    if st.button("Logout Admin"):
-        st.session_state.page = "login"
-        st.rerun()
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# -------------------------------------------------
-# FOOTER
-# -------------------------------------------------
-st.markdown("""
-<div class="center" style="color:gray; margin-top:30px;">
-    MVP v1 • Built with ❤️ by Kav • Scan2Crack
-</div>
-""", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True)
