@@ -112,7 +112,7 @@ elif st.session_state.page == "home":
         if st.session_state.user_data["resume"]:
             st.success("Unlocked")
         else:
-            st.warning("Locked – ₹5")
+            st.warning("Locked – ₹39")
             if st.button("Unlock Resume"):
                 st.session_state.page = "payment"
                 st.rerun()
@@ -122,7 +122,7 @@ elif st.session_state.page == "home":
         if st.session_state.user_data["interview"]:
             st.success("Unlocked")
         else:
-            st.warning("Locked – ₹10")
+            st.warning("Locked – ₹99")
             if st.button("Unlock Interview"):
                 st.session_state.page = "payment"
                 st.rerun()
@@ -132,7 +132,7 @@ elif st.session_state.page == "home":
         if st.session_state.user_data["ai"]:
             st.success("Unlocked")
         else:
-            st.warning("Locked – ₹20")
+            st.warning("Locked – ₹149")
             if st.button("Unlock AI"):
                 st.session_state.page = "payment"
                 st.rerun()

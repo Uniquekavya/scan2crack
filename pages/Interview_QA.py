@@ -138,7 +138,7 @@ if interview_unlocked:
         """
     )
 else:
-    st.warning("🔒 Interview Pack Locked – ₹10")
+    st.warning("🔒 Interview Pack Locked – ₹99")
     st.caption("""
 Includes:
 • 120+ Core ECE Questions  
