@@ -183,6 +183,21 @@ if st.button("Check Resume Score"):
             st.write(f"• {f}")
 
 st.markdown("---")
+# =================================================
+# STEP 1: JOB DESCRIPTION INPUT
+# =================================================
+st.markdown("---")
+st.subheader("📄 Job Description (JD) Analysis")
+
+jd_text = st.text_area(
+    "Paste the Job Description here",
+    placeholder="Paste job description from company career page...",
+    height=200
+)
+
+if jd_text:
+    st.success("JD received successfully.")
+
 
 # =================================================
 # PDF GENERATION
