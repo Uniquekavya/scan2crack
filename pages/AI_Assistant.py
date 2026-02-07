@@ -28,7 +28,7 @@ ai_unlocked = st.session_state.user_data.get("ai", False)
 
 # ---------- LOCKED STATE ----------
 if not ai_unlocked:
-    st.warning("🔒 AI Assistant Locked – ₹149")
+    st.warning("🔒 AI Assistant Locked – ₹20")
     st.caption("""
 Unlock benefits:
 • Ask unlimited ECE interview questions  
