@@ -344,9 +344,8 @@ if jd_text:
 
 else:
     st.info("Paste a Job Description above to see preparation guidance.")
-
 # =================================================
-# ATS READINESS INDICATOR
+# ATS READINESS INDICATOR (TUNED VERSION)
 # =================================================
 st.markdown("---")
 st.subheader("📄 ATS Readiness Indicator")
@@ -355,45 +354,79 @@ def ats_score_checker(resume_text, experience_text, jd_text):
     score = 0
     remarks = []
 
-    # -------- Action Verbs --------
-    action_verbs = ["designed", "developed", "implemented", "integrated", "analyzed", "optimized"]
+    resume_lower = resume_text.lower()
+    jd_lower = jd_text.lower()
+
+    # -------- Strong Action Verbs --------
+    action_verbs = [
+        "designed", "developed", "implemented",
+        "integrated", "optimized", "analyzed"
+    ]
     verb_hits = sum(1 for v in action_verbs if v in experience_text.lower())
 
     if verb_hits >= 3:
-        score += 20
-    else:
+        score += 18
+    elif verb_hits == 2:
+        score += 12
         remarks.append("Use more strong action verbs (designed, implemented, etc.).")
-
-    # -------- Keyword Matching --------
-    keywords = [w for w in jd_text.lower().split() if len(w) > 4]
-    matched_keywords = sum(1 for k in keywords if k in resume_text.lower())
-
-    if matched_keywords >= 10:
-        score += 25
     else:
-        remarks.append("Resume lacks enough job-specific keywords.")
+        remarks.append("Experience section lacks strong action verbs.")
 
-    # -------- Bullet Usage --------
-    bullet_count = experience_text.count("\n")
-    if bullet_count >= 3:
+    # -------- JD-Specific Keyword Matching --------
+    role_keywords = [
+        "embedded", "esp32", "microcontroller",
+        "uart", "spi", "i2c", "rtos",
+        "verilog", "cmos", "vlsi", "asic",
+        "iot", "sensors"
+    ]
+
+    jd_relevant = [k for k in role_keywords if k in jd_lower]
+    matched = [k for k in jd_relevant if k in resume_lower]
+
+    if jd_relevant:
+        match_ratio = len(matched) / len(jd_relevant)
+    else:
+        match_ratio = 0
+
+    if match_ratio >= 0.7:
+        score += 25
+    elif match_ratio >= 0.5:
+        score += 18
+        remarks.append("Resume partially matches job description keywords.")
+    else:
+        remarks.append("Resume lacks important job-specific keywords.")
+
+    # -------- Bullet Structure --------
+    bullet_lines = [l for l in experience_text.split("\n") if l.strip()]
+    if len(bullet_lines) >= 3:
         score += 15
     else:
-        remarks.append("Experience section should have bullet points.")
+        remarks.append("Add more bullet points in experience section.")
 
     # -------- Section Completeness --------
-    if all(len(sec.strip()) > 10 for sec in [profile, experience, education]):
-        score += 20
+    sections_ok = all(len(s.strip()) > 20 for s in [profile, experience, education])
+    if sections_ok:
+        score += 15
     else:
         remarks.append("One or more resume sections are incomplete.")
 
-    # -------- Sentence Length --------
+    # -------- Sentence Length Control --------
     long_lines = [l for l in experience_text.split("\n") if len(l) > 120]
     if not long_lines:
-        score += 20
+        score += 15
     else:
-        remarks.append("Avoid very long sentences (keep under 2 lines).")
+        remarks.append("Avoid long sentences; keep points concise.")
 
-    return score, remarks
+    # -------- Generic Keyword Penalty --------
+    generic_words = ["engineering", "technology", "system", "project"]
+    generic_hits = sum(1 for g in generic_words if g in resume_lower)
+
+    if generic_hits > 5:
+        score -= 5
+        remarks.append("Reduce generic terms; add more role-specific details.")
+
+    # -------- Cap Score (REALISTIC ATS) --------
+    return min(score, 88), remarks
 
 
 # -------- RUN ATS CHECK --------
@@ -416,11 +449,11 @@ if jd_text:
     st.metric("ATS Compatibility Score", f"{ats_score} / 100")
 
     if ats_score >= 80:
-        st.success("✅ High ATS Readiness – Resume is well optimized")
+        st.success("✅ High ATS Readiness")
     elif ats_score >= 60:
-        st.info("⚠️ Medium ATS Readiness – Minor improvements needed")
+        st.info("⚠️ Medium ATS Readiness")
     else:
-        st.warning("❌ Low ATS Readiness – Resume needs optimization")
+        st.warning("❌ Low ATS Readiness")
 
     if ats_remarks:
         st.markdown("### 🔧 ATS Improvement Suggestions")
